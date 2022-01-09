@@ -1,16 +1,16 @@
 const url = 'http://localhost:3000/api/products';
-let kanaps;
-let section = document.getElementById('items');
+let kanaps = "()";
+let section = document.getElementById('items'); // variable 'section' pour aller chercher ID items
 
 //API request
-fetch(url) 
+fetch(url) // va chercher l'url API, 
     .then(resp => resp.json())
-    .then(function(data) {
+    .then(function(data) {    // ensuite renvoie la reponse converti en JSON
         kanaps = data;
-        console.log(data[2].name);
-        section.innerHTML = "<img src='" + data[2].imageUrl + "'>";
+        console.log(data[2].name);  // essai console recuperation name ok dans le tableau
+        section.innerHTML = "<img src='" + data[2].imageUrl + "'>"; // j'injecte une image html (exemple) 
     });
-    
+
 
 
  
@@ -35,24 +35,5 @@ fetch(url)
 
 
 
-/*var html=""; 
-
-
-
-//API request
-const fetchProducts = async() => {
-    products = await fetch(url)    
-        .then(res => res.json());
-        console.log(products);
-};
-items = fetchProducts();
-
-items.forEach(item => {
-    html = html + '<a href="">'+ item.name +'</a>';
-});
-
-document.getElementById('items').innerHTML = `<a href="./product.html?id=()</a>`;
-
-*/
 
 
