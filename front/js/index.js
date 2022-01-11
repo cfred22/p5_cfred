@@ -1,10 +1,14 @@
-const url = 'http://localhost:3000/api/products';
+/*****************************************/
+/*Page index intégrer kanaps depuis l'API*/
+/*****************************************/
+
+const URL = 'http://localhost:3000/api/products';
 var kanaps = "";
 let section = document.getElementById('items'); // variable 'section' pour aller chercher ID items
 var html = "";
 
 //API request
-fetch(url) // va chercher l'url API, requete HTTP 
+fetch(URL) // va chercher l'url API, requete HTTP 
     .then(resp => resp.json())
     .then(function(data) {    // ensuite renvoie la reponse converti en JSON
         kanaps = data;
@@ -19,9 +23,13 @@ fetch(url) // va chercher l'url API, requete HTTP
                 </article>
             </a>`;
         section.innerHTML = html;}))
-        
     });
 ;
+
+
+
+
+
 
 
 
