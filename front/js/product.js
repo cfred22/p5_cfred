@@ -21,10 +21,12 @@ fetch(`http://localhost:3000/api/products/${recupId}`)
 .then(data => {
   console.log(data);
   function ajoutKanap() {    // Ajout des détails du Kanap  
-      const picKanap = document.querySelector(".item__img").innerHTML =
+    const picKanap = document.querySelector(".item__img").innerHTML =
         `<img id="image" src="${data.imageUrl}" alt="${data.altTxt}">`;
-      const nomProduit = document.getElementById("title").innerHTML =
-      `<h1 id="title">${data.name}</h1>`;
+    const nomKanap = document.getElementById("title").innerHTML =
+        `<h1 id="title">${data.name}</h1>`;
+    const prixKanap = document.getElementById("price").innerHTML =
+        `<span id="price">${data.price}</span>`;    
         
     }
     ajoutKanap();
