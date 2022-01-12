@@ -6,31 +6,49 @@ et tu appelles la routes http://localhost:3000/api/products/{id} ({id} est
 à remplacer par l'id que tu as récupéré). 
 Et tu affiches le produit avec les infos récupérées de l'api. */
 
+/*******************************************/
+/*Page PRODUIT intégrer kanaps depuis l'API*/
+/*******************************************/
 
-// Paramètres URL
-const url = new URL(window.location.href);
-console.log(url);
-//Récupération de l'id du kanap
-const recupId = url.searchParams.get("id");
-console.log(recupId); //ok
-let section = document.getElementById('item');
+const url = new URL(window.location.href);   // Paramètres URL
+console.log(url);                            // test ok
 
-//Récupération des détails du produit depuis l'API
+const recupId = url.searchParams.get("id");  // Récupération de l'id du kanap
+console.log(recupId);                        // test ok
+     
+
 fetch(`http://localhost:3000/api/products/${recupId}`)
 .then(response => response.json())
 .then(data => {
-  console.log(data);
-  function ajoutKanap() {    // Ajout des détails du Kanap  
-    const picKanap = document.querySelector(".item__img").innerHTML =
-        `<img id="image" src="${data.imageUrl}" alt="${data.altTxt}">`;
-    const nomKanap = document.getElementById("title").innerHTML =
-        `<h1 id="title">${data.name}</h1>`;
-    const prixKanap = document.getElementById("price").innerHTML =
-        `<span id="price">${data.price}</span>`;    
+    console.log(data);   // Récup. détails de tout le produit depuis l'API
+    function ProduitKanap() {   // Fonction Ajout de tous les détails du Kanap  
         
-    }
-    ajoutKanap();
+        const picKanap = document.querySelector(".item__img").innerHTML =      // Intègration de l'image via la class
+            `<img id="image" src="${data.imageUrl}" alt="${data.altTxt}">`;  
+        const nomKanap = document.getElementById("title").innerHTML =          // Intègration du Nom via l'id
+            `<h1 id="title">${data.name}</h1>`;
+        const prixKanap = document.getElementById("price").innerHTML =         // Intègration du Prix via l'id
+            `<span id="price">${data.price}</span>`; 
+        const description = document.getElementById("description").innerHTML = // Intègration description via l'id
+            `<p id="description">${data.description}</p>`; 
+
+        var couleurs = data.colors;   // création du variable couleurs
+        console.log(couleurs);  // test ok tableau couleurs récupéré
+                                                 
+            couleurs.forEach((couleurs => {   // Fonction Ajout des couleurs du Kanap  
+                couleurs = document.getElementById("colors").innerHTML +=   // Intègration couleurs via l'id
+                `<option value="">${couleurs}</option>`; 
+            })); 
+        }
+    ProduitKanap();
 })
+
+/*******************************************/
+/*       AJOUTER KANAP AU PANIER           */
+/*******************************************/
+
+
+
 
 
  

@@ -4,25 +4,27 @@
 
 const URL = 'http://localhost:3000/api/products';
 var kanaps = "";
-let section = document.getElementById('items'); // variable 'section' pour aller chercher ID items
+var section = document.getElementById('items'); // Variable 'section' pour aller chercher ID items
 var html = "";
 
-//API request
-fetch(URL) // va chercher l'url API, requete HTTP 
+/***********************************/
+/*          API request            */
+/***********************************/
+fetch(URL)                          // Va chercher l'url API, requete HTTP 
     .then(resp => resp.json())
-    .then(function(data) {    // ensuite renvoie la reponse converti en JSON
+    .then(function(data) {          // Ensuite renvoie la reponse converti en JSON
         kanaps = data;
-        console.log(data[2].name);  // essai console recuperation name ok dans le tableau
+        console.log(data[2].name);  // Essai console recuperation name ok dans le tableau
         kanaps.forEach((data => {
-            html = html +
+            html = html +               
             `<a href="./product.html?id=${data._id}">
-                <article>
+                <article>                                 
                     <img src="${data.imageUrl}" alt="${data.altTxt}">     
                     <h3 class="productName">${data.name}</h3>
                     <p class="productDescription">${data.description}</p>
                 </article>
             </a>`;
-        section.innerHTML = html;}))
+        section.innerHTML = html;})) // J'injecte un lien, une image html, un h3, un paragraphe 
     });
 ;
 
@@ -37,8 +39,6 @@ fetch(URL) // va chercher l'url API, requete HTTP
 
 
 
-
-//section.innerHTML = "<img src='" + data[2].imageUrl + "'>"; // j'injecte une image html (exemple) 
 
 
 
