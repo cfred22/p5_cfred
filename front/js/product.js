@@ -3,34 +3,40 @@
 /*Page PRODUIT intégrer kanaps depuis l'API*/
 /*******************************************/
 
-const url = new URL(window.location.href);   // Paramètres URL
+// Paramètres URL récupération
+const url = new URL(window.location.href);   
 console.log(url);                            // test ok
 
-const recupId = url.searchParams.get("id");  // Récupération de l'id du kanap
+// Récupération de l'id du kanap
+const recupId = url.searchParams.get("id");  
 console.log(recupId);                        // test ok
+
+
+// Création des constantes du produit kanap
+const picKanap = document.querySelector(".item__img");
+const nomKanap = document.getElementById("title");
+const prixKanap = document.getElementById("price");
+const description = document.getElementById("description");
      
-
+// Récup. détails de tout le produit depuis l'API
 fetch(`http://localhost:3000/api/products/${recupId}`)
-.then(response => response.json())
-.then(kanap => {
-    console.log(kanap);   // Récup. détails de tout le produit depuis l'API
-    
-    const picKanap = document.querySelector(".item__img").innerHTML =      // Intègration de l'image via la class
+    .then(response => response.json())
+    .then(kanap => {    
+        picKanap.innerHTML =                // Intègration de l'image via la class
         `<img id="image" src="${kanap.imageUrl}" alt="${kanap.altTxt}">`;  
-    const nomKanap = document.getElementById("title").innerHTML =          // Intègration du Nom via l'id
+        nomKanap.innerHTML =                // Intègration du Nom via l'id
         `<h1 id="title">${kanap.name}</h1>`;
-    const prixKanap = document.getElementById("price").innerHTML =         // Intègration du Prix via l'id
+        prixKanap.innerHTML =               // Intègration du Prix via l'id
         `<span id="price">${kanap.price}</span>`; 
-    const description = document.getElementById("description").innerHTML = // Intègration description via l'id
-        `<p id="description">${kanap.description}</p>`; 
+        description.innerHTML =             // Intègration description via l'id
+        `<p id="description">${kanap.description}</p>`;     
 
-    var couleurs = kanap.colors;   // création du variable couleurs
-    console.log(couleurs);  // test ok tableau couleurs récupéré
-                                             
-    couleurs.forEach((couleurs => {   // Fonction Ajout des couleurs du Kanap  
-        couleurs = document.getElementById("colors").innerHTML +=   // Intègration couleurs via l'id
-        `<option value="">${couleurs}</option>`; 
-    }))
+        let couleurs = kanap.colors;        // création variable couleurs                                         
+        couleurs.forEach((couleurs => {     // Fonction Ajout des couleurs du Kanap  
+            couleurs = document.getElementById("colors").innerHTML +=   // Intègration couleurs via l'id
+            `<option value="">${couleurs}</option>`; 
+        })
+    )    
 });
 
 /*******************************************/
@@ -43,20 +49,26 @@ fetch(`http://localhost:3000/api/products/${recupId}`)
 const panier = document.getElementById("addToCart");
 console.log(panier);
 
-function savePanier(panier) {                               // Serialisation qui transforme une donnée complexe,
-    localStorage.setItem('panier', JSON.stringify(panier)); // en chaine de caractère.
+// Serialisation qui transforme une donnée complexe en chaine de caractère.  
+function savePanier(panier) {                               
+    localStorage.setItem('panier', JSON.stringify(panier)); 
 }
 
-/*let kanap = {
-    colors
-    id: "",
-    quantit
-}*/
+// selection du Nombre d'articles
+const selectQuantity = document.getElementById("quantity");
+quantity.addEventListener("change", (event) => {
+    console.log(selectQuantity);
+    ajoutPanier(kanap); 
+})
 
-let kanap = new Object();
+var kanap = new Object();
+
+//Boucle pour la liste déroulante du choix de couleurs
+
+
 
 // Au moment du clic stockage dans local storage 
-panier.addEventListener("click", function() {
+panier.addEventListener("click", (event) => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());  // recupère l'id dans l'URL
     console.log(params);
@@ -88,5 +100,18 @@ function ajoutPanier(kanap) {
     panier.push(kanap);  // Ajouter des produits (Panier considéré comme un tableau)
     savePanier(panier);     
 }
+
+/*let kanap = {
+    colors: [""],
+    id: "",
+    quantity: "0",
+    price: "",
+    id: "",
+    name: "",
+    imageUrl: "",
+    description: "",
+    altTxt: "" 
+}*/
+
 
 

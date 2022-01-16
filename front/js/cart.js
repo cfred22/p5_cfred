@@ -1,6 +1,7 @@
 // page panier
 
 let cart = JSON.parse(localStorage.getItem('panier'));  
+
 console.log(cart);
 var section = document.getElementById('cart__items'); // Variable 'section' pour aller chercher ID items
 
