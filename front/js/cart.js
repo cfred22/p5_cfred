@@ -1,16 +1,18 @@
-// page panier
 
-let cart = JSON.parse(localStorage.getItem('panier'));  
+/**************/
+/*Page PANIER */
+/**************/
 
-console.log(cart);
-var section = document.getElementById('cart__items'); // Variable 'section' pour aller chercher ID items
+let panier = JSON.parse(localStorage.getItem('panier'));  
+// Variable 'section' pour aller chercher ID items
+console.log(panier);
+var section = document.getElementById('cart__items'); 
 
 
-cart.forEach(id => {
-    fetch(`http://localhost:3000/api/products/`+ id)
-    
-    .then(resp => resp.json())
-    .then(kanap => {
+panier.forEach(id => {
+  fetch(`http://localhost:3000/api/products/` + id)
+    .then(response => response.json())
+    .then(kanap => {  
         html = 
         `<article class="cart__item" data-id="${kanap._id} data-color="${kanap.colors}">
             <div class="cart__item__img">

@@ -3,16 +3,18 @@
 /*****************************************/
 
 const URL = 'http://localhost:3000/api/products';
-var section = document.getElementById('items'); // Variable 'section' pour aller chercher ID items
+// Variable 'section' pour aller chercher ID items
+var section = document.getElementById('items'); 
 var html = "";
 
 /***********************************/
 /*          API request            */
 /***********************************/
-fetch(URL)                          // Va chercher l'url API, requete HTTP 
+// Va chercher l'url API, requete HTTP 
+fetch(URL)                          
     .then(resp => resp.json())      // Ensuite renvoie la reponse converti en JSON
     .then(function(kanaps) {          
-        console.log(kanaps[2].name);  // Essai console recuperation name ok dans le tableau
+        /*console.log(kanaps[2].name);  // Essai console recuperation name ok dans le tableau*/
         kanaps.forEach((kanaps => {
             html = html +               
             `<a href="./product.html?id=${kanaps._id}">
