@@ -1,7 +1,7 @@
 
-/*******************************************/
-/*Page PRODUIT intégrer kanaps depuis l'API*/
-/*******************************************/
+//-------------------------------------------------------//
+//   Intégration de la fiche produit kanap depuis l'API  //
+//-------------------------------------------------------//
 
 // Paramètres URL récupération
 const url = new URL(window.location.href);   
@@ -12,13 +12,13 @@ const recupId = url.searchParams.get("id");
 console.log(recupId);                        // test ok
 
 // Création des constantes du produit kanap
+const panier = document.getElementById("addToCart");
+//console.log(panier);
 const picKanap = document.querySelector(".item__img");
 const nomKanap = document.getElementById("title");
 const prixKanap = document.getElementById("price");
 const descriptionKanap = document.getElementById("description");
 const couleurKanap = document.getElementById("colors");
-const panier = document.getElementById("addToCart");
-//console.log(panier);
 const kanapQuantity = document.getElementById("quantity");
 
 // Création des variables du produit kanap
@@ -26,6 +26,8 @@ var kanap = new Object();
 // Variable liée aux event 
 let quantity;
 let colors;
+ 
+
 
      
 // Récup. détails de tout le produit depuis l'API
@@ -59,18 +61,28 @@ couleurKanap.addEventListener("change", (event) => {
 kanapQuantity.addEventListener("change", (event) => {
     quantity = event.target.value;
     console.log(quantity); 
+        
 })
 
 
 // Au moment du clic stockage dans local storage 
 panier.addEventListener("click", (event) => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(urlSearchParams.entries());  // recupère l'id dans l'URL
-    console.log(params);
-    kanap.id = params.id;
-    kanap.quantity = quantity;
-    ajoutPanier(kanap); 
-})
+    event.preventDefault();
+    // Condition du click sur quantité !
+    if(quantity > 0 && quantity <= 100 )  {
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());  // recupère l'id dans l'URL
+        console.log(params);   
+        kanap.id = params.id;
+        kanap.quantity = quantity;
+        ajoutPanier(kanap);       
+
+    } else {   
+        alert('Choisissez une couleur et une quantité inférieur à 100 articles !')
+        return
+}})
+
+
 
 // Serialisation qui transforme une donnée complexe en chaine de caractère.  
 function savePanier(panier) {                               
@@ -80,7 +92,7 @@ function savePanier(panier) {
 // Si panier vide 
 function getPanier() {
     let panier = localStorage.getItem("panier");
-    if (panier == null) {  
+    if (panier < 1) {  
         return[];   // Panier vide       
     } else {
         return JSON.parse(panier);
@@ -90,29 +102,30 @@ function getPanier() {
 // Ajouter des produits (kanaps)
 function ajoutPanier(kanap) {
     let panier = getPanier();
-    /*let foundKanap = panier.find(k => k.id == kanap.id); // Cherche si id(kanap) déjà existant dans mon panier
+    let foundKanap = panier.find(k => k.id == kanap.id); // Cherche si id(kanap) déjà existant dans mon panier
         if (foundKanap != undefined) {  
-        alert("Vous allez ajoutez le même canapé !");
-        foundKanap.quantity++;
+        alert("Vous ajoutez le même canapé ?! visitez votre panier et modifier votre quantité ;)");
+        return;
     }else{
-        kanap.quantity = 1;
+        kanapQuantity;
         
-    }*/  
+    }  
     panier.push(kanap);  // Ajouter des produits (Panier considéré comme un tableau)
     savePanier(panier);     
 }
 
-/*let kanap = {
-    colors: [""],
-    id: "",
-    quantity: "0",
-    price: "",
-    id: "",
-    name: "",
-    imageUrl: "",
-    description: "",
-    altTxt: "" 
-}*/
 
 
-
+// Au moment du clic stockage dans local storage 
+/*panier.addEventListener("click", (event) => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());  // recupère l'id dans l'URL
+    console.log(params);
+    if (kanapQuantity > 0 && kanapQuantity <= 100) { 
+        kanap.id = params.id;
+        kanap.quantity = quantity;
+        ajoutPanier(kanap);
+    } else {   
+        alert('choisissez une couleur et une quantité: ' + err)}
+        return
+})*/

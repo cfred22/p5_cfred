@@ -1,20 +1,28 @@
 
-/**************/
-/*Page PANIER */
-/**************/
+//----------------------------------------------------//
+//   Récupération des produits dans le localstorage   //
+//----------------------------------------------------//
 
+// Récupération du panier du localStorage
 let panier = JSON.parse(localStorage.getItem('panier'));  
-// Variable 'section' pour aller chercher ID items
-console.log(panier);
-var section = document.getElementById('cart__items'); 
+//console.log(panier);
+var html = "";
+var section = document.getElementById('cart__items'); // Variable 'section' pour aller chercher ID items
+console.log(section);
 
 
-panier.forEach(id => {
-  fetch(`http://localhost:3000/api/products/` + id)
-    .then(response => response.json())
-    .then(kanap => {  
-        html = 
-        `<article class="cart__item" data-id="${kanap._id} data-color="${kanap.colors}">
+
+
+
+
+
+panier.forEach(item => {
+    fetch(`http://localhost:3000/api/products/`+ item.id)
+    
+    .then(resp => resp.json())
+    .then(kanap => {
+        html = html + `
+          <article class="cart__item" data-id="${kanap._id} data-color="${kanap.colors}">
             <div class="cart__item__img">
                 <img src="${kanap.imageUrl}" alt="${kanap.altTxt}">
             </div>
@@ -34,14 +42,14 @@ panier.forEach(id => {
                     </div>
                   </div>
                 </div>
-        <article>`; 
+          </article>`; 
         section.innerHTML = html;
+      }
+    )
+  }    
+);
 
-        /*html =
+/*html =
         `<p>Total (<span id=${kanap.totalqantity}><!-- 2 --></span> articles) :
          <span id="totalPrice"><!-- 84,00 --></span> €</p>`
         document.getElementsByClassName('#cart__price').innerHTML = html;*/
-    
-    })
-    
-})

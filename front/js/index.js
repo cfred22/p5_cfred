@@ -1,3 +1,7 @@
+//-------------------------------------------------------//
+//   Intégration page accueil kanap depuis l'API         //
+//-------------------------------------------------------//
+
 /*****************************************/
 /*Page index intégrer kanaps depuis l'API*/
 /*****************************************/
@@ -16,7 +20,7 @@ fetch(URL)
     .then(function(kanaps) {          
         /*console.log(kanaps[2].name);  // Essai console recuperation name ok dans le tableau*/
         kanaps.forEach((kanaps => {
-            html = html +               
+            html =                
             `<a href="./product.html?id=${kanaps._id}">
                 <article>                                 
                     <img src="${kanaps.imageUrl}" alt="${kanaps.altTxt}">     
@@ -24,30 +28,7 @@ fetch(URL)
                     <p class="productDescription">${kanaps.description}</p>
                 </article>
             </a>`;
-        section.innerHTML = html;})) // J'injecte un lien, une image html, un h3, un paragraphe 
-    });
-;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        section.insertAdjacentHTML("beforeend", html);})) // J'injecte un lien, une image html, un h3, un paragraphe 
+    })    
+   
+.catch(err => alert('Impossible de se connecter au serveur : ' + err));        
