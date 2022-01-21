@@ -56,7 +56,7 @@ fetch(`http://localhost:3000/api/products/${recupId}`)
 // Event pour la liste déroulante du choix de couleurs
 kanapCouleur.addEventListener("change", (event) => {
     colors = event.target.value;
-    console.log(event.target); 
+    console.log(event.target.value); 
 });
 
 // Event pour selection du Nombre d'articles 
@@ -69,7 +69,8 @@ kanapQuantity.addEventListener("change", (event) => {
 boutonPanier.addEventListener("click", (event) => {
     event.preventDefault();
     // Condition du click sur quantité !
-    if(quantity > 0 && quantity <= 100 && colors !== undefined )  {
+    if(quantity > 0 && quantity <= 100 && colors !== undefined && colors != "none")  {
+        console.log(colors);
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());  // recupère l'id dans l'URL
         //console.log(params);   
