@@ -130,7 +130,7 @@ const villeValide = function (inputVille) {
 formulaire.email.addEventListener('input', function (){
   emailValide(this);
 });
-var regexEmail = RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$", "g");
+var regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const emailValide = function (inputEmail) {
   //Regex pour valider l'email
   let emailRegex = regexEmail;
