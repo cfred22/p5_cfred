@@ -10,14 +10,8 @@ var html = "";
 var section = document.getElementById('cart__items'); // Variable 'section' pour aller chercher ID items
 console.log(section);
 
-// Panier vide retour Accueil
-function retourAccueil() {
-  if (panier == null) {
-    alert(`Oups ! Oubli de votre KANAP ? retour accueil !`)
-    location.href = 'index.html';
-  } 
-}
 retourAccueil();
+
 
 
 // Recherche dans le localstorage(panier), affiche les kanaps demandés aux positions Spécifiés du DOM  
@@ -53,45 +47,100 @@ panier.forEach(item => {
   }    
 );
 
-//ECOUTE DU FORMULAIRE
+
+
+// Changement quantité produits page panier
+changeQuantity();
+
+// Panier vide retour Accueil
+function retourAccueil() {
+  if (panier == null) {
+    alert(`Oups ! Oubli de votre KANAP ? retour accueil !`)
+    location.href = 'index.html';
+  } 
+}
+
+// Changement quantité produits page panier
+function changeQuantity() {
+  let kanapQuantity = document.querySelectorAll('.itemQuantity');
+  console.log(kanapQuantity);
+  for (let index = 0; index < kanapQuantity.length; index++) {
+    kanapQuantity[index].addEventListener('change', (event) => {
+      event.preventDefault();
+      let kanapNewQuantity = event.target.value;
+      let newPanierTab = {
+        id: panier[index].id,
+        name: panier[index].name,
+        price: panier[index].price,
+        color: panier[index].color,
+        quantity: kanapNewQuantity,
+        image: panier[index].image,
+        alt: panier[index].alt,
+      };
+      console.log(newPanierTab)
+      panier[index] = newPanierTab;
+      localStorage.clear();
+      localStorage.setItem('panier',JSON.stringify(panier));
+      location.reload();
+    });
+  }
+};
+
+
+
 const formulaire = document.querySelector('.cart__order__form');
 //Verif de la saisie
+var regex = /^[-'a-zA-ZÀ-ÖØ-öø-ÿ\s]{3,}$/;
+var regexAdress = /^[-'a-zA-Z0-9À-ÖØ-öø-ÿ\s]{3,}$/;
+var prenomValide = false; 
+var nomValide = false;
+var adresseValide =false;
+
 // 1- Ecoute du prenom
-formulaire.firstName.addEventListener('input', function (){
-  prenomValide(this);
-});
-var regexPrenomNom = /^[-'a-zA-ZÀ-ÖØ-öø-ÿ\s]{3,}$/;
-const prenomValide = function (inputPrenom) {
+formulaire.firstName.addEventListener('input', function(){
   //Regex pour valider le prénom
-  let prenomRegex = regexPrenomNom;
   // Test regex 
-  let testPrenom = prenomRegex.test(inputPrenom.value);
+  let testPrenom = regex.test(this.value);
+ 
   if(testPrenom) {
-    inputPrenom.nextElementSibling.innerHTML = "";
-    return true;
+    prenomValide = true; 
+    this.nextElementSibling.innerHTML = "";
   }else{
-    inputPrenom.nextElementSibling.innerHTML = "Des lettres et au moins 3 caractères !";
-    return false;
+    prenomValide = false; 
+    this.nextElementSibling.innerHTML = "Des lettres et au moins 3 caractères !";
   }
-};
-// 2- Ecoute du nom 
-formulaire.lastName.addEventListener('input', function (){
-  nomValide(this);
 });
-const nomValide = function (inputNom) {
-  //Regex pour valider le nom
-  let nomRegex = regexPrenomNom;
+
+// 2- Ecoute du nom
+formulaire.lastName.addEventListener('input', function(){
   // Test regex 
-  let testNom = nomRegex.test(inputNom.value);
+  let testNom = regex.test(this.value);
+ 
   if(testNom) {
-    inputNom.nextElementSibling.innerHTML = "";
-    return true;
+    nomValide = true; 
+    this.nextElementSibling.innerHTML = "";
   }else{
-    inputNom.nextElementSibling.innerHTML = "Des lettres et au moins 3 caractères !";
-    return false;
+    nomValide = false; 
+    this.nextElementSibling.innerHTML = "Des lettres et au moins 3 caractères !";
   }
-};
-// 3- Ecoute de l'adresse 
+});
+
+// 2- Ecoute dE L'adresse
+formulaire.address.addEventListener('input', function(){
+  // Test regex 
+  let testAdresse = regexAdress.test(this.value);
+ 
+  if(testAdresse) {
+    adresseValide = true; 
+    this.nextElementSibling.innerHTML = "";
+  }else{
+    adresseValide = false; 
+    this.nextElementSibling.innerHTML = "Des lettres et au moins 3 caractères !";
+  }
+});
+
+
+/*// 3- Ecoute de l'adresse 
 formulaire.address.addEventListener('input', function (){
   adresseValide(this);
 });
@@ -109,6 +158,7 @@ const adresseValide = function (inputAdresse) {
     return false;
   }
 };
+/*
 // 4- Ecoute de la ville 
 formulaire.city.addEventListener('input', function (){
   villeValide(this);
@@ -143,7 +193,31 @@ const emailValide = function (inputEmail) {
     inputEmail.nextElementSibling.innerHTML = "Email non valide !";
     return false;
   }
+};*/
+
+
+
+function verifForm() {
+  if (
+    prenomValide /*&&
+    nomValide() &&
+    adresseValide() &&
+    villeValide() &&
+    emailValide()
+  */) {
+    return true;
+  } else {
+    alert('Le formulaire contient des erreurs.');
+    return false;
+  }
 };
+
+
+
+
+
+
+
 
 
 // Objet defini pour les données de commande  
@@ -163,8 +237,7 @@ const commander = document.getElementById('order');
 
 commander.addEventListener("click", (event) => {
   event.preventDefault();
-  if(
-    prenomValide()) {
+  if (verifForm()){
     return true;
   
   }else{
@@ -192,7 +265,6 @@ fetch("http://localhost:3000/api/products/order", post)
   document.location.href = `confirmation.html?id= ${data.orderId}`;
 
 });*/
-
 
 
 
