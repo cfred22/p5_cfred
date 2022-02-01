@@ -13,95 +13,82 @@ console.log(section);
 retourAccueil();
 
 
-
 // Recherche dans le localstorage(panier), affiche les kanaps demandés aux positions Spécifiés du DOM  
 panier.forEach(item => {
-    fetch(`http://localhost:3000/api/products/`+ item.id)    
+  fetch(`http://localhost:3000/api/products/`+ item.id)    
     .then(resp => resp.json())
     .then(kanap => {
-        html = html + `
-          <article class="cart__item" data-id="${kanap._id} data-color="${item.colors}">
-            <div class="cart__item__img">
-                <img src="${kanap.imageUrl}" alt="${kanap.altTxt}">
-            </div>
-            <div class="cart__item__content">
-                  <div class="cart__item__content__description">
-                    <h2>${kanap.name}</h2>
-                    <p>${item.colors}</p>
-                    <p>${kanap.price} €</p>
-                  </div>
-                  <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                      <p>Qté : </p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.quantity}">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                      <p class="${kanap.delete}">Supprimer</p>
-                    </div>
-                  </div>
-                </div>
-          </article>`; 
-        section.innerHTML = html;
-      }
-    )
-  }    
+      affichageProduit(item, kanap);        
+      updateQuantity();
+    })
+  }  
 );
 
-
-
-// Changement quantité produits page panier
-changeQuantity();
-
+function affichageProduit(item, kanap) {
+  html = html + `
+    <article class="cart__item" data-id="${kanap._id} data-color="${item.colors}">
+      <div class="cart__item__img">
+          <img src="${kanap.imageUrl}" alt="${kanap.altTxt}">
+      </div>
+      <div class="cart__item__content">
+            <div class="cart__item__content__description">
+              <h2>${kanap.name}</h2>
+              <p>${item.colors}</p>
+              <p>${kanap.price} €</p>
+            </div>
+            <div class="cart__item__content__settings">
+              <div class="cart__item__content__settings__quantity">
+                <p>Qté : </p>
+                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.quantity}">
+              </div>
+              <div class="cart__item__content__settings__delete">
+                <p class="${kanap.delete}">Supprimer</p>
+              </div>
+            </div>
+          </div>
+    </article>`; 
+  section.innerHTML = html;
+}
 // Panier vide retour Accueil
 function retourAccueil() {
   if (panier == null) {
-    alert(`Oups ! Oubli de votre KANAP ? retour accueil !`)
+    alert(`Oups ! Oubli de votre KANAP ? retour accueil !`);
     location.href = 'index.html';
   } 
 }
 
-// Changement quantité produits page panier
-function changeQuantity() {
-  let kanapQuantity = document.querySelectorAll('.itemQuantity');
-  console.log(kanapQuantity);
-  for (let index = 0; index < kanapQuantity.length; index++) {
-    kanapQuantity[index].addEventListener('change', (event) => {
-      event.preventDefault();
-      let kanapNewQuantity = event.target.value;
-      let newPanierTab = {
-        id: panier[index].id,
-        name: panier[index].name,
-        price: panier[index].price,
-        color: panier[index].color,
-        quantity: kanapNewQuantity,
-        image: panier[index].image,
-        alt: panier[index].alt,
-      };
-      console.log(newPanierTab)
-      panier[index] = newPanierTab;
-      localStorage.clear();
-      localStorage.setItem('panier',JSON.stringify(panier));
-      location.reload();
-    });
-  }
-};
 
+// Changement quantité produits page panier par utilisateur en direct
+function updateQuantity() {
+  // création d'un tableau
+  var kanapQuantityTab = document.querySelectorAll(".itemQuantity");
+  let newQuantity;
 
+  kanapQuantityTab.forEach(kanap => {
+    console.log(kanap); 
+    kanap.addEventListener("change", (event) => {
+    newQuantity = event.target.value;
+    console.log(newQuantity);
+    }  
+  )
+});
+}
 
+//Verif de la saisie avec les expressions régulières REGEX
 const formulaire = document.querySelector('.cart__order__form');
-//Verif de la saisie
 var regex = /^[-'a-zA-ZÀ-ÖØ-öø-ÿ\s]{3,}$/;
-var regexAdress = /^[-'a-zA-Z0-9À-ÖØ-öø-ÿ\s]{3,}$/;
+var regexLocal= /^[-'a-zA-Z0-9À-ÖØ-öø-ÿ\s]{3,}$/;
+var regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 var prenomValide = false; 
 var nomValide = false;
-var adresseValide =false;
+var adresseValide = false;
+var villeValide = false;
+var emailValide = false;
 
 // 1- Ecoute du prenom
 formulaire.firstName.addEventListener('input', function(){
-  //Regex pour valider le prénom
-  // Test regex 
+  // Test regex avec regex défini pour le nom et le prénom 
   let testPrenom = regex.test(this.value);
- 
   if(testPrenom) {
     prenomValide = true; 
     this.nextElementSibling.innerHTML = "";
@@ -113,9 +100,7 @@ formulaire.firstName.addEventListener('input', function(){
 
 // 2- Ecoute du nom
 formulaire.lastName.addEventListener('input', function(){
-  // Test regex 
   let testNom = regex.test(this.value);
- 
   if(testNom) {
     nomValide = true; 
     this.nextElementSibling.innerHTML = "";
@@ -125,100 +110,59 @@ formulaire.lastName.addEventListener('input', function(){
   }
 });
 
-// 2- Ecoute dE L'adresse
+// 2- Ecoute de L'adresse
 formulaire.address.addEventListener('input', function(){
-  // Test regex 
-  let testAdresse = regexAdress.test(this.value);
- 
+  // Test regex avec regex défini pour la ville et l'adresse 
+  let testAdresse = regexLocal.test(this.value);
   if(testAdresse) {
     adresseValide = true; 
     this.nextElementSibling.innerHTML = "";
   }else{
     adresseValide = false; 
-    this.nextElementSibling.innerHTML = "Des lettres et au moins 3 caractères !";
+    this.nextElementSibling.innerHTML = "Adresse non valide !";
   }
 });
 
-
-/*// 3- Ecoute de l'adresse 
-formulaire.address.addEventListener('input', function (){
-  adresseValide(this);
-});
-var regexVilleAdresse = /^[-'a-zA-Z0-9À-ÖØ-öø-ÿ\s]{3,}$/;
-const adresseValide = function (inputAdresse) {
-  //Regex pour valider l'adresse
-  let adresseRegex = regexVilleAdresse;
-  // Test regex 
-  let testAdresse = adresseRegex.test(inputAdresse.value);
-  if(testAdresse) {
-    inputAdresse.nextElementSibling.innerHTML = "";
-    return true;
-  }else{
-    inputAdresse.nextElementSibling.innerHTML = "Adresse non valide !";
-    return false;
-  }
-};
-/*
-// 4- Ecoute de la ville 
-formulaire.city.addEventListener('input', function (){
-  villeValide(this);
-});
-
-const villeValide = function (inputVille) {
-  //Regex pour valider la ville
-  let villeRegex = regexVilleAdresse;
-  // Test regex 
-  let testVille = villeRegex.test(inputVille.value);
+// 2- Ecoute de la ville
+formulaire.city.addEventListener('input', function(){
+  let testVille = regexLocal.test(this.value);
   if(testVille) {
-    inputVille.nextElementSibling.innerHTML = "";
-    return true;
+    villeValide = true; 
+    this.nextElementSibling.innerHTML = "";
   }else{
-    inputVille.nextElementSibling.innerHTML = "Ville non valide !";
-    return false;
+    VilleValide = false; 
+    this.nextElementSibling.innerHTML = "Ville non valide !";
   }
-};// 5- Ecoute de L'email
-formulaire.email.addEventListener('input', function (){
-  emailValide(this);
 });
-var regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-const emailValide = function (inputEmail) {
-  //Regex pour valider l'email
-  let emailRegex = regexEmail;
-  // Test regex 
-  let testEmail = emailRegex.test(inputEmail.value);
+
+// 2- Ecoute de l'email
+formulaire.email.addEventListener('input', function(){
+  // Test regex défini pour l'email 
+  let testEmail = regexEmail.test(this.value);
   if(testEmail) {
-    inputEmail.nextElementSibling.innerHTML = "";
-    return true;
+    emailValide = true; 
+    this.nextElementSibling.innerHTML = "";
   }else{
-    inputEmail.nextElementSibling.innerHTML = "Email non valide !";
-    return false;
+    emailValide = false; 
+    this.nextElementSibling.innerHTML = "Ville non valide !";
   }
-};*/
+});
 
-
-
+// Fonction pour vérifier que le remplissage du formulaire est conforme
 function verifForm() {
   if (
-    prenomValide /*&&
-    nomValide() &&
-    adresseValide() &&
-    villeValide() &&
-    emailValide()
-  */) {
+    prenomValide &&
+    nomValide &&
+    adresseValide &&
+    villeValide &&
+    emailValide
+  ) {
     return true;
   } else {
     alert('Le formulaire contient des erreurs.');
     return false;
   }
 };
-
-
-
-
-
-
-
-
 
 // Objet defini pour les données de commande  
 var dataCommande = {
@@ -237,43 +181,31 @@ const commander = document.getElementById('order');
 
 commander.addEventListener("click", (event) => {
   event.preventDefault();
-  if (verifForm()){
-    return true;
-  
+  if (verifForm()){    
+    const post = {
+      method: 'POST',  
+      headers: {
+        'content-Type': 'application/json'},
+      body: JSON.stringify(dataCommande),
+    }; 
+    console.log(post);
+    // Recherche OK orderId
+    fetch("http://localhost:3000/api/products/order", post)       
+      .then((response) => response.json())
+      .then(data => {
+      console.log(data); 
+      // ok orderid bien récupéré !
+      localStorage.setItem("orderId", data.orderId);
+      document.location.href = `confirmation.html?id= ${data.orderId}`;
+    });   
   }else{
     alert("le formulaire comporte des erreurs");
   
 }});
 
 
-// Requête POST pour envoyer les données à lAPI et recup l'orderId
-/*const post = {
-  method: 'POST',  
-  headers: {
-    'content-Type': 'application/json'},
-  body: JSON.stringify(dataCommande),
-}; 
-console.log(post);
-// Recherche OK orderId
-fetch("http://localhost:3000/api/products/order", post)       
-  .then((response) => response.json())
-  .then(data => {
-  console.log(data); 
-  // ok orderid bien récupéré !
-  localStorage.setItem("orderId", data.orderId);
-  
-  document.location.href = `confirmation.html?id= ${data.orderId}`;
-
-});*/
 
 
-
-
-
-
-
-//orderId: "92669ba0-7ada-11ec-aba8-351d7aa9ef6b"
-//orderId: 'cc58c940-7adb-11ec-aba8-351d7aa9ef6b'
 
 
 
