@@ -10,6 +10,12 @@ var html = "";
 var section = document.getElementById('cart__items'); // Variable 'section' pour aller chercher ID items
 console.log(section);
 
+// Création des variables du produit kanap
+var kanap = new Object();
+// Variable liée au event 
+var quantity;
+var colors;
+
 retourAccueil();
 
 
@@ -24,9 +30,10 @@ panier.forEach(item => {
   }  
 );
 
+// Affichage produits
 function affichageProduit(item, kanap) {
   html = html + `
-    <article class="cart__item" data-id="${kanap._id} data-color="${item.colors}">
+    <article class="cart__item" data-id="${kanap._id}" data-color="${item.colors}">
       <div class="cart__item__img">
           <img src="${kanap.imageUrl}" alt="${kanap.altTxt}">
       </div>
@@ -60,19 +67,125 @@ function retourAccueil() {
 
 // Changement quantité produits page panier par utilisateur en direct
 function updateQuantity() {
-  // création d'un tableau
+  // Cible la quantité à modifier
   var kanapQuantityTab = document.querySelectorAll(".itemQuantity");
   let newQuantity;
+  //*var id = this.closest('article').dataset.id;*//
+
 
   kanapQuantityTab.forEach(kanap => {
     console.log(kanap); 
+    const itemClosest = kanap.closest("article");
+    // recuperation de l'id du parent article
+    var id = itemClosest.dataset.id;
+    console.log(id);
+
+    // Récupération de la couleur du parent article
+    var color = itemClosest.dataset.color;
+    console.log(color);
+
     kanap.addEventListener("change", (event) => {
     newQuantity = event.target.value;
     console.log(newQuantity);
-    }  
-  )
-});
+
+      if(newQuantity > 0 && newQuantity <= 100)  {
+        console.log(newQuantity);
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());  // recupère l'id dans l'URL
+        //console.log(params);   
+        kanap.id = params.id;
+        kanap.quantity = newQuantity;
+        kanap.color = color;
+        // Ajout Panier -> voir fonction (Ajouter des produits !)  
+        ajoutPanier(kanap); 
+
+      }else {   
+        alert('Choisissez une couleur et une quantité \(inférieur à 100 articles !\)')
+        return
+    }
+    let panier = getPanier();
+    panier.forEach(item => {
+      if(item.id == kanap.id && item.colors == kanap.colors) {
+        // Si il y a un kanap (id + couleur) identique alors on incrémente le localstorage
+        isHere = true;
+        quantity += parseInt(kanap.quantity);
+      }
+    })      
+    savePanier(panier);
+  });  
+})
+};
+
+
+
+// Si panier vide 
+function getPanier() {
+  let panier = localStorage.getItem("panier");
+      if (panier < 1) {  
+      return[];         
+  } else {
+      return JSON.parse(panier);
+  };
 }
+
+// Ajouter des produits ! 
+function ajoutPanier(kanap) {
+  //recupère le tableau panier du localstorage 
+  let panier = getPanier(); 
+  // Création d'une variable "je suis la!"    
+  let isHere = false;
+  // Pour chaque kanap du panier localstorage comparaison 
+  panier.forEach(item => {
+      if(item.id == kanap.id && item.colors == kanap.colors) {
+          // Si il y a un kanap (id + couleur) identique alors on incrémente le localstorage
+          isHere = true;
+          item.quantity += parseInt(kanap.quantity);
+      }  
+  });
+  // Si il n'y a pas de kanap (id + couleur) identique alors on ajoute un clé 
+  if (isHere == false) {
+      panier.push(kanap);  
+  }
+  // sauvegarde du panier -> voir fonction (sérialisation plus bas) 
+  savePanier(panier);     
+};
+
+// Serialisation qui transforme une donnée complexe en chaine de caractère.  
+function savePanier(panier) {                               
+  localStorage.setItem('panier', JSON.stringify(panier)); 
+}
+
+
+
+/*let totalPrix = 0;
+for(let i =0; i < kanapQuantity.clientHeight; ++i) {
+  totalPrix += panier.price++;
+} */
+
+// Supprimer un produit kanap
+/*function supprimerKanap() {
+  var suppr = document.querySelector(".deletItem")
+  suppr.addEventListener("click", function (event) {
+    let kanap = event.target.value;
+    const choixId = kanap.dataset.id;
+    const choixColor = kanap.dataset.color;
+    panier = panier.filter((n) => n.id != choixId && n.color != choixColor);
+    savePanier(panier);
+  })
+}; 
+supprimerKanap();*/
+
+
+
+
+
+
+
+
+
+
+
+
 
 //Verif de la saisie avec les expressions régulières REGEX
 const formulaire = document.querySelector('.cart__order__form');
@@ -202,9 +315,6 @@ commander.addEventListener("click", (event) => {
     alert("le formulaire comporte des erreurs");
   
 }});
-
-
-
 
 
 

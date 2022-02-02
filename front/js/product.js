@@ -83,7 +83,8 @@ boutonPanier.addEventListener("click", (event) => {
     } else {   
         alert('Choisissez une couleur et une quantité \(inférieur à 100 articles !\)')
         return
-}})
+    }
+})
 
 // Si panier vide 
 function getPanier() {
@@ -121,8 +122,6 @@ function ajoutPanier(kanap) {
 function savePanier(panier) {                               
     localStorage.setItem('panier', JSON.stringify(panier)); 
 }
-
-
 
 
 
