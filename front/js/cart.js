@@ -166,18 +166,24 @@ function savePanier(panier) {
 
 
 /*let totalPrix = 0;
-for(let i =0; i < kanapQuantity.clientHeight; ++i) {r
+for(let i =0; i < kanapQuantity.clientHeight; ++i) {
   totalPrix += panier.price++;
 } */
 
  //Supprimer un produit kanap
- const supprKanap = ({ id, colors}) => {
-   console.log(supprKanap);
-  const index = item.findIndex((i) => i._id === id && i.colors === colors);
-  item.splice(index, 1);
-  const panier = panier.map((i) => ({ _id: i._id, colors: i.colors, quantity: i.quantity }));
-  localStorage.setItem('panier', JSON.stringify(panier));
-};
+function supprimerKanap() {
+  var supprKanap = document.querySelector(".deletItem")
+  for (let index = 0; index < supprKanap.length; index++) {
+
+
+    supprKanap[index].addEventListener("click", function (event) {
+      panier.splice(i, 1);
+      localStorage.setItem("kanap", JSON.stringify(panier));
+      alert("Votre Kanap a été supprimé")
+    })
+  }
+}
+supprimerKanap();
 
 
 
