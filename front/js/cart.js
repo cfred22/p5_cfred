@@ -184,15 +184,23 @@ for(let i =0; i < kanapQuantity.clientHeight; ++i) {
 supprimerKanap();
 */
 
+// Delete an item from cart
+/*const deleteCartItem = ({ id, color }) => {
+  const index = cart.findIndex((i) => i._id === id && i.color === color);
+  cart.splice(index, 1);
+  const cartStorage = cart.map((i) => ({ _id: i._id, color: i.color, quantity: i.quantity }));
+  localStorage.setItem('cart', JSON.stringify(cartStorage));
+};*/
+
 
 //Supprimer un produit kanap
 function supprimerKanap() {
   const supprKanap = document.querySelectorAll('.deleteItem')
   console.log(supprKanap);
-  supprKanap.forEach(panier => {
+  supprKanap.forEach(item => {
     supprKanap[index].addEventListener("click", (event) => {
       panier.splice(index, 1);
-      localStorage.setItem('panier',JSON.stringify(panier));
+      localStorage.setItem('item',JSON.stringify(panier));
       alert("Votre Kanap a été supprimé")
       
     })
