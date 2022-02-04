@@ -19,15 +19,21 @@ var colors;
 retourAccueil();
 
 
+
+
 // Recherche dans le localstorage(panier), affiche les kanaps demandés aux positions Spécifiés du DOM  
-panier.forEach(item => {
+panier.map(item => {
   fetch(`http://localhost:3000/api/products/`+ item.id)    
     .then(resp => resp.json())
     .then(kanap => {
       affichageProduit(item, kanap);        
       updateQuantity();
+      supprimerKanap();
+      console.log(kanap);
+      totalPanier(kanap);
     })
   }  
+  
 );
 
 // Affichage produits
@@ -66,20 +72,22 @@ function retourAccueil() {
 
 // Changement quantité KANAP par utilisateur en direct sur le panier
 function updateQuantity() {
-  const itemQuantity = document.querySelectorAll('.itemQuantity');
-  for (let index = 0; index < itemQuantity.length; index++) {
-    itemQuantity[index].addEventListener('change', (event) => {
+  const kanapQuantity = document.querySelectorAll('.itemQuantity');
+  for (let index = 0; index < kanapQuantity.length; index++) {
+    kanapQuantity[index].addEventListener('change', (event) => {
       event.preventDefault();
       const kanapNewQuantity = event.target.value;
       const newPanier = {
         id: panier[index].id,
         colors: panier[index].colors,
         quantity: kanapNewQuantity,
+        price: panier[index].price,
       };
       panier[index] = newPanier;
       localStorage.clear();
       localStorage.setItem('panier',JSON.stringify(panier)
       );
+      location.reload();
     });
   }
 }
@@ -91,8 +99,8 @@ function ajoutPanier(kanap) {
   // Création d'une variable "je suis la!"    
   let isHere = false;
   // Pour chaque kanap du panier localstorage comparaison 
-  panier.forEach(item => {
-      if(item.id == kanap.id && item.colors == kanap.colors) {
+  panier.map(kanap => {
+      if(kanap.id == kanap.id && kanap.colors == kanap.colors) {
           // Si il y a un kanap (id + couleur) identique alors on incrémente le localstorage
           isHere = true;
           item.newQuantity += parseInt(kanap.quantity);
@@ -109,10 +117,10 @@ function ajoutPanier(kanap) {
 // Si panier vide 
 function getPanier() {
   let panier = localStorage.getItem("panier");
-      if (panier < 1) {  
-      return[];         
-  } else {
-      return JSON.parse(panier);
+    if (panier < 1) {  
+    return[];         
+  }else{
+    return JSON.parse(panier);
   };
 }
 
@@ -123,24 +131,50 @@ function savePanier(panier) {
 
 //Supprimer un produit kanap
 function supprimerKanap() {
-  const supprKanap = document.querySelectorAll('.deleteItem');
+  const supprKanap = document.querySelectorAll('.deleteItem');   
+  console.log(panier);
   console.log(supprKanap);
-  for (let index = 0; index < supprKanap.length; index++) {
+  for (let index = 0; index < supprKanap.length; index++) {       
     supprKanap[index].addEventListener('click', (event) => {
+      console.log(supprKanap);
       event.preventDefault();
-      panier.splice(index, 1);
-      savePanier();
-      updateQuantity();
+      panier.splice(index, 1);     
+      localStorage.setItem('panier',JSON.stringify(panier));
+      alert("Votre Kanap a été supprimé")
+      location.reload();
     })
-    
   }
 };
-supprimerKanap();
 
-/*let totalPrix = 0;
-for(let i =0; i < kanapQuantity.clientHeight; ++i) {
-  totalPrix += panier.price++;
-} */
+
+function totalPanier(kanap) {
+  //Total des articles 
+  let kanapQuantite = document.getElementsByClassName("itemQuantity");
+  let length = kanapQuantite.length;
+  let kanapTotal = 0;
+  
+
+  for(let index = 0; index < length; index++) {
+    kanapTotal += kanapQuantite[index].valueAsNumber;
+    console.log(kanapTotal);
+    // ok décompte !
+  }
+  
+  let kanapTotalQuantite = document.getElementById("totalQuantity");
+  kanapTotalQuantite.innerHTML = kanapTotal;
+
+  //Total des prix
+  let prixTotal = 0;
+
+  for(let index = 0; index < length; index++) {
+    prixTotal += kanapQuantite[index].valueAsNumber * kanap.price;
+    
+  }
+  let prixTotalKanap = document.getElementById("totalPrice");
+  prixTotalKanap.innerHTML = prixTotal;
+    
+};  
+
 
 //Supprimer un produit kanap
 /*function supprimerKanap() {
@@ -283,7 +317,7 @@ commander.addEventListener("click", (event) => {
       document.location.href = `confirmation.html`;
     });   
   }else{
-    alert("le formulaire comporte des erreurs");
+    alert("Veuillez corriger celui-ci");
   
 }});
 
