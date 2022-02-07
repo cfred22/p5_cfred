@@ -19,7 +19,7 @@ fetch(URL)
     .then(resp => resp.json())      // Ensuite renvoie la reponse converti en JSON
     .then(function(kanaps) {          
         /*console.log(kanaps[2].name);  // Essai console recuperation name ok dans le tableau*/
-        kanaps.forEach((kanaps => {
+        kanaps.map((kanaps => {
             html =                
             `<a href="./product.html?id=${kanaps._id}">
                 <article>                                 
