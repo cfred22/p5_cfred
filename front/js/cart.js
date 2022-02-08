@@ -17,6 +17,7 @@ var quantity;
 var colors;
 var kanapQuantite = document.getElementsByClassName("itemQuantity");
 
+// variable pour la fonction prix
 var compteurPrix = 0;
 let prixTotal = 0;  
 
@@ -79,6 +80,8 @@ function retourAccueil() {
   } 
 }
 
+
+
 // Changement quantité KANAP par utilisateur en direct sur le panier
 function updateQuantity() {
   const kanapQuantity = document.querySelectorAll('.itemQuantity');
@@ -103,7 +106,8 @@ function updateQuantity() {
 
 //Supprimer un produit kanap
 function supprimerKanap() {  
-  console.log(panier);   
+  console.log(panier);  
+  retourAccueil();
   const supprKanap = document.querySelectorAll('.deleteItem');  
   console.log(supprKanap); // ???
   for (let i = 0; i < supprKanap.length; i++) {   
@@ -113,12 +117,16 @@ function supprimerKanap() {
       event.preventDefault();
       panier.splice(i, 1);     
       localStorage.setItem('panier',JSON.stringify(panier));
-      alert("Votre Kanap a été supprimé")
+      alert("Suppression de votre Kanap !")
       location.reload();
+      if(panier.length == 0) {
+        alert(`Remplissez votre panier ! retour à l'accueil ;)`);
+        document.location.href = `index.html`;
+        localStorage.clear();
+      }
     })
   }
 };
-
 
 // Ajouter des produits ! 
 function ajoutPanier(kanap) {
@@ -155,34 +163,10 @@ function getPanier() {
 // Serialisation qui transforme une donnée complexe en chaine de caractère.  
 function savePanier(panier) {                               
   localStorage.setItem('panier', JSON.stringify(panier)); 
-  
 }
 
-
-
-//Supprimer un produit kanap
-/*function supprimerKanap() {  
-  console.log(panier);   
-  supprKanap = document.querySelectorAll('.deleteItem');  
-  console.log(supprKanap[compteur]); // ???
-        
-  supprKanap[compteur].addEventListener('click', (event) => {
-    
-    event.preventDefault();
-    panier.kanap.splice(k, 1);     
-    localStorage.setItem('panier',JSON.stringify(panier));
-    alert("Votre Kanap a été supprimé")
-    location.reload();
-  })
-  
-  compteur++;
-  
-};*/
-
-
-
-function totalQuantite() {
-  //Total des articles   
+//Total des articles 
+function totalQuantite() {    
   let kanapTotal = 0;  
 
   for(let k = 0; k < kanapQuantite.length; k++) {
@@ -194,8 +178,9 @@ function totalQuantite() {
   kanapTotalQuantite.innerHTML = kanapTotal; 
 }
 
+//Total des prix
 function totalPrix(kanap) {
-  //Total des prix
+  
   prixTotal += kanapQuantite[compteurPrix].valueAsNumber * kanap.price;
   console.log(prixTotal);
 

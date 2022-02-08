@@ -31,4 +31,5 @@ fetch(URL)
         section.insertAdjacentHTML("beforeend", html);})) // J'injecte un lien, une image html, un h3, un paragraphe 
     })    
    
-.catch(err => alert('Impossible de se connecter au serveur : ' + err));        
+.catch(err => alert('Impossible de se connecter au serveur : ' + err));   
+
