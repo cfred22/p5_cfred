@@ -20,16 +20,8 @@ var kanapQuantite = document.getElementsByClassName("itemQuantity");
 // variable pour la fonction prix
 var compteurPrix = 0;
 let prixTotal = 0;  
-
-
-
-
-
-
+// retour accueil index voir ligne 67
 retourAccueil();
-
-
-
 
 // Recherche dans le localstorage(panier), affiche les kanaps demandés aux positions Spécifiés du DOM  
 panier.map(item => {
@@ -79,8 +71,6 @@ function retourAccueil() {
     location.href = 'index.html';
   } 
 }
-
-
 
 // Changement quantité KANAP par utilisateur en direct sur le panier
 function updateQuantity() {
@@ -245,7 +235,7 @@ formulaire.city.addEventListener('input', function(){
     villeValide = true; 
     this.nextElementSibling.innerHTML = "";
   }else{
-    VilleValide = false; 
+    villeValide = false; 
     this.nextElementSibling.innerHTML = "Ville non valide !";
   }
 });
@@ -259,7 +249,7 @@ formulaire.email.addEventListener('input', function(){
     this.nextElementSibling.innerHTML = "";
   }else{
     emailValide = false; 
-    this.nextElementSibling.innerHTML = "Ville non valide !";
+    this.nextElementSibling.innerHTML = "Email non valide !";
   }
 });
 
