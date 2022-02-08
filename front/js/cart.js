@@ -20,7 +20,7 @@ var kanapQuantite = document.getElementsByClassName("itemQuantity");
 // variable pour la fonction prix
 var compteurPrix = 0;
 let prixTotal = 0;  
-// retour accueil index voir ligne 67
+// retour accueil index voir ligne
 retourAccueil();
 
 // Recherche dans le localstorage(panier), affiche les kanaps demandés aux positions Spécifiés du DOM  
