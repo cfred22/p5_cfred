@@ -23,8 +23,11 @@ let prixTotal = 0;
 // retour accueil index voir ligne
 retourAccueil();
 
+// compte le nombre de passage du forEach pour cibler les éléments demandés par l'utilisateur 
+var compteur = 0;
+
 // Recherche dans le localstorage(panier), affiche les kanaps demandés aux positions Spécifiés du DOM  
-panier.map(item => {
+/*panier.map(item => {
   fetch(`http://localhost:3000/api/products/`+ item.id)    
     .then(resp => resp.json())
     .then(kanap => {
@@ -33,28 +36,52 @@ panier.map(item => {
       supprimerKanap();
       totalQuantite();
       totalPrix(kanap);
-      
     })
   }  
-);
+);*/
+
+const promises = panier.map(elt => {
+    return fetch(`http://localhost:3000/api/products/` + elt.id)
+    .then(resp => {
+      return resp.json();
+       
+    });  
+});
+
+Promise.all(promises)
+  .then(kanaps => {
+    kanaps.forEach(kanap => {      
+    affichageProduit(kanap);  
+    console.log(this); 
+    console.log(kanap);
+    updateQuantity();
+    console.log(quantity)
+    supprimerKanap();
+    totalQuantite();
+    totalPrix(kanap);
+    // compte le nombre de passage du 
+    // forEach pour cibler les éléments 
+    compteur++;   
+  });
+});
 
 // Affichage produits
-function affichageProduit(item, kanap) {
+function affichageProduit(kanap) {
   html = html + `
-    <article class="cart__item" data-id="${kanap._id}" data-color="${item.colors}">
+    <article class="cart__item" data-id="${kanap._id}" data-color="${panier[compteur].colors}">
       <div class="cart__item__img">
           <img src="${kanap.imageUrl}" alt="${kanap.altTxt}">
       </div>
       <div class="cart__item__content">
             <div class="cart__item__content__description">
               <h2>${kanap.name}</h2>
-              <p>${item.colors}</p>
+              <p>${panier[compteur].colors}</p>
               <p>${kanap.price} €</p>
             </div>
             <div class="cart__item__content__settings">
               <div class="cart__item__content__settings__quantity">
                 <p>Qté : </p>
-                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.quantity}">
+                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${panier[compteur].quantity}">
               </div>
               <div class="cart__item__content__settings__delete">
                 <p class="deleteItem">Supprimer</p>
@@ -64,6 +91,7 @@ function affichageProduit(item, kanap) {
     </article>`; 
   section.innerHTML = html;
 }
+
 // Panier vide retour Accueil
 function retourAccueil() {
   if (panier == null) {
@@ -75,20 +103,19 @@ function retourAccueil() {
 // Changement quantité KANAP par utilisateur en direct sur le panier
 function updateQuantity() {
   const kanapQuantity = document.querySelectorAll('.itemQuantity');
-  for (let index = 0; index < kanapQuantity.length; index++) {
-    kanapQuantity[index].addEventListener('change', (event) => {
+  for (let i = 0; i < kanapQuantity.length; i++) {
+    kanapQuantity[i].addEventListener('change', (event) => {
       event.preventDefault();
       const kanapNewQuantity = event.target.value;
       const newPanier = {
-        id: panier[index].id,
-        colors: panier[index].colors,
+        id: panier[i].id,
+        colors: panier[i].colors,
         quantity: kanapNewQuantity,
-        price: panier[index].price,
+        price: panier[i].price,
       };
-      panier[index] = newPanier;
+      panier[i] = newPanier;
       localStorage.clear();
-      localStorage.setItem('panier',JSON.stringify(panier)
-      );
+      localStorage.setItem('panier',JSON.stringify(panier));
       location.reload();
     });
   }

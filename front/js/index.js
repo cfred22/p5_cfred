@@ -15,12 +15,14 @@ var html = "";
 /*          API request            */
 /***********************************/
 // Va chercher l'url API, requete HTTP 
-fetch(URL)                          
-    .then(resp => resp.json())      // Ensuite renvoie la reponse converti en JSON
+fetch(URL)   
+    // Ensuite renvoie la reponse converti en JSON                   
+    .then(resp => resp.json())      
     .then(function(kanaps) {          
-        /*console.log(kanaps[2].name);  // Essai console recuperation name ok dans le tableau*/
+        //console.log(kanaps[2].name);// Essai console recuperation name ok dans le tableau
         kanaps.map((kanaps => {
-            html =                
+            html =    
+            // J'injecte un lien, une image html, un h3, un paragraphe             
             `<a href="./product.html?id=${kanaps._id}">
                 <article>                                 
                     <img src="${kanaps.imageUrl}" alt="${kanaps.altTxt}">     
@@ -28,8 +30,14 @@ fetch(URL)
                     <p class="productDescription">${kanaps.description}</p>
                 </article>
             </a>`;
-        section.insertAdjacentHTML("beforeend", html);})) // J'injecte un lien, une image html, un h3, un paragraphe 
+            // J'injecte un lien, une image html, un h3, un paragraphe 
+        section.insertAdjacentHTML("beforeend", html);})) 
     })    
    
-.catch(err => alert('Impossible de se connecter au serveur : ' + err));   
+.catch(err => alert('Impossible de se connecter au serveur : ' + err)); 
+
+
+
+
+
 

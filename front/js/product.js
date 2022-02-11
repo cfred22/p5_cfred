@@ -78,7 +78,8 @@ boutonPanier.addEventListener("click", (event) => {
         kanap.quantity = quantity;
         kanap.colors = colors;
         // Ajout Panier -> voir fonction (Ajouter des produits !)  
-        ajoutPanier(kanap);       
+        ajoutPanier(kanap);     
+        alert("Kanap\(s)\ bien ajouté\(s)\ au panier !");  
 
     } else {   
         alert('Choisissez une couleur et une quantité \(inférieur à 100 articles !\)')
