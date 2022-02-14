@@ -33,6 +33,7 @@ var colors;
 fetch(`http://localhost:3000/api/products/${recupId}`)
     .then(response => response.json())
     .then(kanap => {    
+        console.log(kanap);
         picKanap.innerHTML =                
         `<img id="image" src="${kanap.imageUrl}" alt="${kanap.altTxt}">`;  
         nomKanap.innerHTML =                
@@ -79,8 +80,6 @@ boutonPanier.addEventListener("click", (event) => {
         kanap.colors = colors;
         // Ajout Panier -> voir fonction (Ajouter des produits !)  
         ajoutPanier(kanap);     
-        alert("Kanap\(s)\ bien ajouté\(s)\ au panier !");  
-
     } else {   
         alert('Choisissez une couleur et une quantité \(inférieur à 100 articles !\)')
         return
@@ -91,10 +90,10 @@ boutonPanier.addEventListener("click", (event) => {
 function getPanier() {
     let panier = localStorage.getItem("panier");
         if (panier < 1) {  
-        return[];         
+        return[]; 
     } else {
         return JSON.parse(panier);
-    };
+    };    
 }
 
 // Ajouter des produits ! 
@@ -109,6 +108,7 @@ function ajoutPanier(kanap) {
             // Si il y a un kanap (id + couleur) identique alors on incrémente le localstorage
             isHere = true;
             item.quantity += parseInt(kanap.quantity);
+            console.log(kanap.id);
         }  
     });
     // Si il n'y a pas de kanap (id + couleur) identique alors on ajoute un clé 
@@ -122,6 +122,7 @@ function ajoutPanier(kanap) {
 // Serialisation qui transforme une donnée complexe en chaine de caractère.  
 function savePanier(panier) {                               
     localStorage.setItem('panier', JSON.stringify(panier)); 
+    console.log(panier);
 }
 
 

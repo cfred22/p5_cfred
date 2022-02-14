@@ -20,10 +20,12 @@ var kanapQuantite = document.getElementsByClassName("itemQuantity");
 // variable pour la fonction prix
 var compteurPrix = 0;
 let prixTotal = 0;  
-// retour accueil index voir ligne
+
+// retour fonction accueil index voir ligne 97
 retourAccueil();
 
-// compte le nombre de passage du forEach pour cibler les éléments demandés par l'utilisateur 
+// Compte le nombre de passage du forEach,
+// pour cibler les éléments demandés par l'utilisateur 
 var compteur = 0;
 
 // Recherche dans le localstorage(panier), affiche les kanaps demandés aux positions Spécifiés du DOM  
@@ -52,7 +54,6 @@ Promise.all(promises)
   .then(kanaps => {
     kanaps.forEach(kanap => {      
     affichageProduit(kanap);  
-    console.log(this); 
     console.log(kanap);
     updateQuantity();
     console.log(quantity)
@@ -119,16 +120,16 @@ function updateQuantity() {
       location.reload();
     });
   }
+  console.log(panier);
 }
 
 //Supprimer un produit kanap
 function supprimerKanap() {  
-  console.log(panier);  
   retourAccueil();
   const supprKanap = document.querySelectorAll('.deleteItem');  
   console.log(supprKanap); // ???
   for (let i = 0; i < supprKanap.length; i++) {   
-    console.log(i);    
+    
     supprKanap[i].addEventListener('click', (event) => {
       console.log(event);
       event.preventDefault();
@@ -143,6 +144,7 @@ function supprimerKanap() {
       }
     })
   }
+  console.log(panier);  
 };
 
 // Ajouter des produits ! 
