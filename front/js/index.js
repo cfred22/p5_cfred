@@ -22,7 +22,7 @@ fetch(URL)
         console.log(kanaps[2].name);// Essai console recuperation name ok dans le tableau
         kanaps.map((kanaps => {
             html =    
-            // J'injecte un lien, une image html, un h3, un paragraphe             
+            // J'injecte un lien, une image html avec sa description, un h3, un paragraphe             
             `<a href="./product.html?id=${kanaps._id}">
                 <article>                                 
                     <img src="${kanaps.imageUrl}" alt="${kanaps.altTxt}">     
@@ -30,7 +30,7 @@ fetch(URL)
                     <p class="productDescription">${kanaps.description}</p>
                 </article>
             </a>`;
-            // J'injecte un lien, une image html, un h3, un paragraphe 
+            
         section.insertAdjacentHTML("beforeend", html);})) 
     })    
    

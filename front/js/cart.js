@@ -56,7 +56,6 @@ Promise.all(promises)
     affichageProduit(kanap);  
     console.log(kanap);
     updateQuantity();
-    console.log(quantity)
     supprimerKanap();
     totalQuantite();
     totalPrix(kanap);
@@ -65,6 +64,7 @@ Promise.all(promises)
     compteur++;   
   });
 });
+
 
 // Affichage produits
 function affichageProduit(kanap) {
@@ -137,9 +137,9 @@ function supprimerKanap() {
       localStorage.setItem('panier',JSON.stringify(panier));
       alert("Suppression de votre Kanap !")
       location.reload();
-      if(panier.length == 0) {
+      if (localStorage.getItem("panier.value") == null) {
         alert(`Remplissez votre panier ! retour à l'accueil ;)`);
-        document.location.href = `index.html`;
+        document.location.href = `index.html`;    
         localStorage.clear();
       }
     })

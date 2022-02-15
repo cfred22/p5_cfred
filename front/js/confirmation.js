@@ -1,5 +1,5 @@
 // Fonction de recuperation de l'orderId
-function commandeOk () {
+function commandeOk() {
     if (localStorage.getItem("orderId") == null) {
         document.location.href = `index.html`;
     }
